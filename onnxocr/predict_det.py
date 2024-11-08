@@ -40,15 +40,14 @@ class TextDetector(PredictBase):
         # 实例化预处理操作类
         self.preprocess_op = create_operators(pre_process_list)
         # self.postprocess_op = build_post_process(postprocess_params)
-        # 实例化后处理操作类
-        self.postprocess_op = DBPostProcess(**postprocess_params)
+        if not args.skip_det_postproc:
+            # 实例化后处理操作类
+            self.postprocess_op = DBPostProcess(**postprocess_params)
 
         # 初始化模型
-        self.det_onnx_session = self.get_onnx_session(args.det_model_dir, args.use_gpu)
-        self.det_input_name = self.get_input_name(self.det_onnx_session)
-        self.det_output_name = self.get_output_name(self.det_onnx_session)
-
-
+        #self.det_onnx_session = self.get_onnx_session(args.det_model_dir, args.use_gpu)
+        #self.det_input_name = self.get_input_name(self.det_onnx_session)
+        #self.det_output_name = self.get_output_name(self.det_onnx_session)
 
 
     def order_points_clockwise(self, pts):
