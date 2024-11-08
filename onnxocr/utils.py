@@ -336,7 +336,13 @@ def infer_args():
     parser.add_argument("--use_onnx", type=str2bool, default=False)
 
     # for debug
+    parser.add_argument("--matt_debug", type=str2bool, default=False)
     parser.add_argument("--skip_rec", type=str2bool, default=False)
-    parser.add_argument("--skip_det_postproc", type=str2bool, default=False)
     
     return parser
+
+def matt_debug(obj, key, val):
+    if not hasattr(obj.args, "mydbg"):
+        obj.args.mydbg = {}
+    obj.args.mydbg[key] = val
+    

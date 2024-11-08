@@ -2,7 +2,7 @@ import numpy as np
 from onnxocr.imaug import transform, create_operators
 from onnxocr.db_postprocess import DBPostProcess
 from onnxocr.predict_base import PredictBase
-
+from onnxocr.utils import matt_debug
 
 class TextDetector(PredictBase):
     def __init__(self, args):
@@ -40,14 +40,13 @@ class TextDetector(PredictBase):
         # 实例化预处理操作类
         self.preprocess_op = create_operators(pre_process_list)
         # self.postprocess_op = build_post_process(postprocess_params)
-        if not args.skip_det_postproc:
-            # 实例化后处理操作类
-            self.postprocess_op = DBPostProcess(**postprocess_params)
+        # 实例化后处理操作类
+        self.postprocess_op = DBPostProcess(**postprocess_params)
 
         # 初始化模型
-        #self.det_onnx_session = self.get_onnx_session(args.det_model_dir, args.use_gpu)
-        #self.det_input_name = self.get_input_name(self.det_onnx_session)
-        #self.det_output_name = self.get_output_name(self.det_onnx_session)
+        self.det_onnx_session = self.get_onnx_session(args.det_model_dir, args.use_gpu)
+        self.det_input_name = self.get_input_name(self.det_onnx_session)
+        self.det_output_name = self.get_output_name(self.det_onnx_session)
 
 
     def order_points_clockwise(self, pts):
@@ -102,6 +101,11 @@ class TextDetector(PredictBase):
         img, shape_list = data
         if img is None:
             return None, 0
+        
+        if self.args.matt_debug:
+            matt_debug(self, "img1_shape", img.shape)
+            matt_debug(self, "shape_list1_shape", shape_list.shape)
+
         img = np.expand_dims(img, axis=0)
         shape_list = np.expand_dims(shape_list, axis=0)
         img = img.copy()
